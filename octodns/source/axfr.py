@@ -27,7 +27,7 @@ class AxfrBaseSource(BaseSource):
     SUPPORTS_GEO = False
     SUPPORTS_DYNAMIC = False
     SUPPORTS = set(('A', 'AAAA', 'CNAME', 'MX', 'NS', 'PTR', 'SPF',
-                    'SRV', 'TXT'))
+                    'SRV', 'TXT', 'CCA')) /* Add CCA */
 
     def __init__(self, id):
         super(AxfrBaseSource, self).__init__(id)
@@ -42,6 +42,12 @@ class AxfrBaseSource(BaseSource):
     _data_for_A = _data_for_multiple
     _data_for_AAAA = _data_for_multiple
     _data_for_NS = _data_for_multiple
+
+    def _data_for_CCA(self, _type, records): 
+    values = []
+        for record in records: 
+            flag, tag, ca = record['value'].split(' ', 2) values.append({ 'flag': flag,'tag': tag, 'ca': ca, }) 
+    return { 'ttl': records[0]['ttl'], 'type': _type, 'values': values }
 
     def _data_for_MX(self, _type, records):
         values = []
